@@ -1,25 +1,39 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
-namespace WindowsApplication1 {
-    public partial class Form1 : Form {
-        public Form1() {
+namespace WindowsApplication1
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e) {
-            // TODO: This line of code loads data into the 'nwindDataSet.Invoices' table. You can move, or remove it, as needed.
-            this.invoicesTableAdapter.Fill(this.nwindDataSet.Invoices);
-
-            #region #1
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            invoicesBindingSource.DataSource = GetInvoicesDataTable();
             colUnitPrice.FieldNameSortGroup = "ExtendedPrice";
             colUnitPrice.SortOrder = DevExpress.Data.ColumnSortOrder.Ascending;
-            #endregion #1
+        }
+
+        DataTable GetInvoicesDataTable()
+        {
+            DataTable table = new DataTable();
+            table.TableName = "Invoices";
+            table.Columns.Add(new DataColumn("ProductName", typeof(string)));
+            table.Columns.Add(new DataColumn("Discount", typeof(int)));
+            table.Columns.Add(new DataColumn("Quantity", typeof(int)));
+            table.Columns.Add(new DataColumn("UnitPrice", typeof(double)));
+            table.Columns.Add(new DataColumn("ExtendedPrice", typeof(double)));
+            Random random = new Random();
+            for(int i = 0; i < 20; i++)
+            {
+                int index = i + 1;
+                table.Rows.Add("Product " + index, index * 2, index % 9, (index + random.Next(1, 10)) * 1000d, (index + random.Next(1, 10)) * 1000d + index * 100d);
+            }
+            return table;
         }
     }
 }

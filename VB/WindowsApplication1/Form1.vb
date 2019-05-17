@@ -1,27 +1,35 @@
-Imports Microsoft.VisualBasic
 Imports System
-Imports System.Collections.Generic
-Imports System.ComponentModel
 Imports System.Data
-Imports System.Drawing
-Imports System.Text
 Imports System.Windows.Forms
 
 Namespace WindowsApplication1
-	Partial Public Class Form1
-		Inherits Form
-		Public Sub New()
-			InitializeComponent()
-		End Sub
+    Partial Public Class Form1
+        Inherits Form
 
-		Private Sub Form1_Load(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.Load
-			' TODO: This line of code loads data into the 'nwindDataSet.Invoices' table. You can move, or remove it, as needed.
-			Me.invoicesTableAdapter.Fill(Me.nwindDataSet.Invoices)
+        Public Sub New()
+            InitializeComponent()
+        End Sub
 
-'			#Region "#1"
-			colUnitPrice.FieldNameSortGroup = "ExtendedPrice"
-			colUnitPrice.SortOrder = DevExpress.Data.ColumnSortOrder.Ascending
-'			#End Region ' #1
-		End Sub
-	End Class
+        Private Sub Form1_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
+            invoicesBindingSource.DataSource = GetInvoicesDataTable()
+            colUnitPrice.FieldNameSortGroup = "ExtendedPrice"
+            colUnitPrice.SortOrder = DevExpress.Data.ColumnSortOrder.Ascending
+        End Sub
+
+        Private Function GetInvoicesDataTable() As DataTable
+            Dim table As DataTable = New DataTable()
+            table.TableName = "Invoices"
+            table.Columns.Add(New DataColumn("ProductName", GetType(String)))
+            table.Columns.Add(New DataColumn("Discount", GetType(Integer)))
+            table.Columns.Add(New DataColumn("Quantity", GetType(Integer)))
+            table.Columns.Add(New DataColumn("UnitPrice", GetType(Double)))
+            table.Columns.Add(New DataColumn("ExtendedPrice", GetType(Double)))
+            Dim random As Random = New Random()
+            For i As Integer = 0 To 20 - 1
+                Dim index As Integer = i + 1
+                table.Rows.Add("Product " & index, index * 2, index Mod 9, (index + random.[Next](1, 10)) * 1000.0R, (index + random.[Next](1, 10)) * 1000.0R + index * 100.0R)
+            Next
+            Return table
+        End Function
+    End Class
 End Namespace
